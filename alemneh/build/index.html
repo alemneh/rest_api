@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Ideas</title>
+  </head>
+  <body data-ng-app="IdeaApp">
+    <h1>Members</h1>
+    <main data-ng-init="ideactrl.getIdeas()" data-ng-controller="IdeaController as ideactrl">
+      <li>
+        {{ideactrl.ideas}}
+      </li>
+    </main>
+    <script src="./bundle.js"></script>
+  </body>
+</html>

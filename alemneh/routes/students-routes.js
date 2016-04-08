@@ -23,6 +23,14 @@ module.exports = (studentsRouter, db) => {
       });
 
     });
+    
+  studentsRouter.route('/students')
+    .get((req, res) => {
+      Student.find({}, (err, student) =>{
+        res.json({data: student});
+      });
+    })
+
 
   studentsRouter.route('/:student')
     .get(jwtAuth, (req, res) => {
@@ -49,12 +57,6 @@ module.exports = (studentsRouter, db) => {
       });
     });
 
-  studentsRouter.route('/:student/students')
-    .get(jwtAuth, (req, res) => {
-      Student.find({}, (err, student) =>{
-        res.json({data: student});
-      });
-    })
 
 
 };
