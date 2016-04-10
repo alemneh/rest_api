@@ -7,6 +7,7 @@ module.exports = (studentsRouter, db) => {
 
   studentsRouter.route('/signup')
     .post((req, res) => {
+      console.log(req.body);
       Student.findOne({name: req.body.name}, (err, student) => {
         if(err) throw err;
         if(!student) {
@@ -23,7 +24,7 @@ module.exports = (studentsRouter, db) => {
       });
 
     });
-    
+
   studentsRouter.route('/students')
     .get((req, res) => {
       Student.find({}, (err, student) =>{
@@ -33,16 +34,16 @@ module.exports = (studentsRouter, db) => {
 
 
   studentsRouter.route('/:student')
-    .get(jwtAuth, (req, res) => {
+    .get((req, res) => {
       Student.findById(req.params.student, (err, student) =>{
         res.json({data: student});
       });
-    }).put(jwtAuth, (req, res) => {
+    }).put((req, res) => {
       Student.findByIdAndUpdate(req.params.student, req.body, (err, student) =>{
         if(err) return res.send(err);
         res.json(student);
       });
-    }).delete(jwtAuth, (req, res) => {
+    }).delete((req, res) => {
       Student.findById(req.params.student, (err, student) =>{
         student.ideas.forEach((idea) => {
           Idea.findById(idea, (err, data) => {

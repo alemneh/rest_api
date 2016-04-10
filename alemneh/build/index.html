@@ -6,10 +6,18 @@
   </head>
   <body data-ng-app="IdeaApp">
     <h1>Members</h1>
-    <main data-ng-init="ideactrl.getIdeas()" data-ng-controller="IdeaController as ideactrl">
-      <li>
-        {{ideactrl.ideas}}
-      </li>
+    <main data-ng-init="studentctrl.getStudents()" data-ng-controller="StudentController as studentctrl">
+      <ul data-ng-repeat="student in studentctrl.students">
+        <li>{{student.name}}</li>
+        <li>{{student.track}}</li>
+        <button data-ng-click="studentctrl.removeStudent(student)">Delete</button>
+      </ul>
+      <form data-ng-submit="studentctrl.createStudent(newStudent)">
+        Name: <input type="text" name="name" value="" data-ng-model="newStudent.name"/><br />
+        Password: <input type="password" name="password" value="" data-ng-model="newStudent.password"/><br />
+        Track: <input type="text" name="track" value="" data-ng-model="newStudent.track"/><br />
+        <button type="submit">New Student</button>
+      </form>
     </main>
     <script src="./bundle.js"></script>
   </body>
