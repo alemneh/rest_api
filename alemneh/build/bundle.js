@@ -47,36 +47,70 @@
 	__webpack_require__(1);
 
 	const app = angular.module('IdeaApp', []);
-	app.controller('StudentController', ['$http', function($http) {
+	app.controller('StudentController', ['$scope','$http', function($scope, $http) {
 	  const route = 'http://localhost:3000';
-	  this.students = [];
-	  this.getStudents = function() {
+	  $scope.students = [];
+	  $scope.getStudents = function() {
 	    $http.get(route+'/students')
 	      .then((res) => {
 	        console.log(res.data.data);
 
-	        this.students = res.data.data;
+	        $scope.students = res.data.data;
 	      }, function(error) {
 	        console.error(error);
 	      })
 	  }
-	  this.createStudent = function(student) {
-	    $http.post(route+'/signup', student)
+	  $scope.createStudent = function(newStudent) {
+	    $http.post(route+'/signup', newStudent)
 	      .then((res) => {
 	        console.log(res);
 
-	        this.students.push(student);
-	        this.newStudent = {};
+	        $scope.students.push(newStudent);
+	        $scope.newStudent = {};
 	      }, function(error) {
 	        console.log(error);
 	      })
 	  }
-	  this.removeStudent = function(student) {
+	  $scope.removeStudent = function(student) {
 	    $http.delete(route+'/'+student._id)
 	      .then((res) => {
 	        console.log(res);
 
-	        this.students = this.students.filter((s) => s._id != student._id);
+	        $scope.students = $scope.students.filter((s) => s._id != student._id);
+	      }, function(error) {
+	        console.log(error);
+	      })
+	  }
+	  $scope.updateStudent = function(student) {
+	    console.log(student._id);
+	    $http.put(route + '/' + student._id, student)
+	      .then((res) => {
+	        console.log(res);
+	        $scope.editing = false;
+	      }, function(error) {
+	        console.log(error);
+	      })
+	  }
+	  $scope.getStudentIdeas = function(student) {
+	    $http.get(route + '/' + student._id + '/ideas')
+	      .then((res) => {
+	        student.showIdeas = false;
+	        student.ideas = res.data.data;
+	      }, function(error) {
+	        console.log(error);
+	      })
+	  }
+	  $scope.createNewIdea = function(student, newIdea) {
+	    $http.post(route+ '/' + student._id + '/ideas', newIdea)
+	      .then((res) => {
+	        console.log(res);
+	      })
+	  }
+	  $scope.removeIdea = function(student, idea) {
+	    $http.delete(route + '/' + student._id + '/ideas/' + idea._id)
+	      .then((res) => {
+	        console.log(res);
+	        student.ideas = student.ideas.filter((s) => s._id != idea._id);
 	      }, function(error) {
 	        console.log(error);
 	      })

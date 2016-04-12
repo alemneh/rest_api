@@ -39,6 +39,7 @@ module.exports = (studentsRouter, db) => {
         res.json({data: student});
       });
     }).put((req, res) => {
+      console.log(req.body);
       Student.findByIdAndUpdate(req.params.student, req.body, (err, student) =>{
         if(err) return res.send(err);
         res.json(student);

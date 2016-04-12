@@ -3,16 +3,43 @@
   <head>
     <meta charset="utf-8">
     <title>Ideas</title>
+    <style>
+      .ng-cloak {
+        display: none !important;
+      }
+    </style>
   </head>
-  <body data-ng-app="IdeaApp">
-    <h1>Members</h1>
-    <main data-ng-init="studentctrl.getStudents()" data-ng-controller="StudentController as studentctrl">
-      <ul data-ng-repeat="student in studentctrl.students">
+  <body class="ng-cloak" data-ng-app="IdeaApp">
+    <h1>Students</h1>
+    <main data-ng-init="getStudents()" data-ng-controller="StudentController">
+      <ul data-ng-repeat="student in students" data-ng-init="getStudentIdeas(student)">
         <li>{{student.name}}</li>
         <li>{{student.track}}</li>
-        <button data-ng-click="studentctrl.removeStudent(student)">Delete</button>
+        <h3>Ideas:</h3>
+        <li data-ng-repeat="idea in student.ideas" data-ng-if="student.showIdeas">
+          <p>Sector: {{idea.sector}}</p>
+          <p>Language: {{idea.lang}}</p>
+          <p>Team Size: {{idea.teamSize}}</p>
+          <button data-ng-click="removeIdea(student, idea)">Delete</button>
+        </li>
+        <button data-ng-click="student.showIdeas = true">Ideas</button>
+        <button data-ng-click="removeStudent(student)">Delete</button>
+        <button data-ng-click="student.editing = true">Edit</button>
+        <form data-ng-if="student.editing" data-ng-submit="updateStudent(student)">
+          Name: <input type="text" data-ng-model="student.name" />
+          Track: <input type="text" data-ng-model="student.track" />
+          <button data-ng-click="student.editing = false">Cancel</button>
+          <button type="submit">Update</button>
+          <button data-ng-click="student.editing = false">Done</button>
+        </form>
+        <form data-ng-if="student.editing" data-ng-submit="createNewIdea(student, newIdea)">
+          Sector: <input type="text" name="sector" value="" data-ng-model="newIdea.sector"/><br />
+          Language: <input type="text" name="lang" value="" data-ng-model="newIdea.lang"/><br />
+          Team Size: <input type="text" name="teamSize" value="" data-ng-model="newIdea.teamSize"/><br />
+          <button type="submit">New Idea</button>
+        </form>
       </ul>
-      <form data-ng-submit="studentctrl.createStudent(newStudent)">
+      <form data-ng-submit="createStudent(newStudent)">
         Name: <input type="text" name="name" value="" data-ng-model="newStudent.name"/><br />
         Password: <input type="password" name="password" value="" data-ng-model="newStudent.password"/><br />
         Track: <input type="text" name="track" value="" data-ng-model="newStudent.track"/><br />

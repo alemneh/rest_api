@@ -11,10 +11,11 @@ module.exports = (ideaRouter, db) => {
          .populate('ideas')
          .exec((err, student) => {
            if(err) throw err;
-           res.send('Here is your list of ideas\n'+student.ideas);
+           res.json({data: student.ideas});
          });
     })
     .post((req, res) => {
+      console.log(req.body);
       Student.findById(req.params.student, (err, student) => {
         var newIdea = new Idea(req.body);
         newIdea._owner.push(student.name);
