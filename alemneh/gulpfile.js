@@ -6,7 +6,7 @@ const webpack = require('gulp-webpack');
 
 var files = ['gulpfile.js', 'server.js', __dirname + '/lib/**/*.js', __dirname + '/test/**/*.js',
             __dirname + '/models/**/*.js', __dirname + '/routes/**/*.js'];
-
+var client = [__dirname + '/app/js/*.js', __dirname + '/app/css/*.css', __dirname + '/app/index.html'];
 //Run mocha for tests
 gulp.task('mocha', function() {
   return gulp.src(__dirname +'/test/rest_test.js', {read: false})
@@ -58,15 +58,25 @@ gulp.task('lint', function() {
     .pipe(eslint.format());
 });
 
+gulp.task('build:html', function() {
+  gulp.src('app/*.html')
+  .pipe(gulp.dest('build/'));
+});
+
+gulp.task('build:css', function() {
+  gulp.src('app/css/*.css')
+  .pipe(gulp.dest('build/css/'));
+});
+
 
 gulp.task('webpack', function() {
-  return gulp.src(__dirname + '/index.js')
+  return gulp.src(__dirname + '/app/js/index.js')
     .pipe(webpack( require('./webpack.config.js')))
     .pipe(gulp.dest(__dirname + '/build'));
 });
 
 gulp.task('watch', function() {
-  gulp.watch('./index.js', ['webpack']);
+  gulp.watch(client, ['webpack', 'build:html', 'build:css']);
 })
 
 //Run tasks on changes to files
