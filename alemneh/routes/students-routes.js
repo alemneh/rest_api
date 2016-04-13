@@ -7,7 +7,6 @@ module.exports = (studentsRouter, db) => {
 
   studentsRouter.route('/signup')
     .post((req, res) => {
-      console.log(req.body);
       Student.findOne({name: req.body.name}, (err, student) => {
         if(err) throw err;
         if(!student) {

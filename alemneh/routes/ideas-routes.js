@@ -15,7 +15,6 @@ module.exports = (ideaRouter, db) => {
          });
     })
     .post((req, res) => {
-      console.log(req.body);
       Student.findById(req.params.student, (err, student) => {
         var newIdea = new Idea(req.body);
         newIdea._owner.push(student.name);
@@ -38,12 +37,16 @@ module.exports = (ideaRouter, db) => {
           data: idea
         });
       });
-    }).put((req, res) => {
+    })
+    .put((req, res) => {
+      console.log(req.body);
       Idea.findByIdAndUpdate(req.params.idea, req.body, (err, idea) =>{
         if(err) return res.send(err);
         res.json({msg: 'successfully updated!'});
       });
-    }).delete((req, res) => {
+    })
+    .delete((req, res) => {
+      console.log(req.params.idea);
       Idea.findById(req.params.idea, (err, idea) =>{
         idea.remove((err, idea) => {
           Student.findById(req.params.student, (err, student) => {

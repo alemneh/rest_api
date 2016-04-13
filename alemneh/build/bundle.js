@@ -50,6 +50,33 @@
 	app.controller('StudentController', ['$scope','$http', function($scope, $http) {
 	  const route = 'http://localhost:3000';
 	  $scope.students = [];
+	  var oldIdea = {};
+	  var oldStudent = {}
+	  $scope.setStudent = function (student) {
+	    oldStudent = {
+	      name: student.name,
+	      track: student.track
+	    };
+	  }
+	  $scope.cancelStudent = function(student) {
+
+	    student.name = oldStudent.name;
+	    student.track = oldStudent.track;
+	  }
+	  $scope.setIdea = function (idea) {
+	    oldIdea = {
+	      sector: idea.sector,
+	      lang: idea.lang,
+	      teamSize: idea.teamSize
+	    };
+	  }
+	  $scope.cancelIdea = function(idea) {
+
+	    idea.sector = oldIdea.sector;
+	    idea.lang = oldIdea.lang;
+	    idea.teamSize = oldIdea.teamSize;
+	  }
+
 	  $scope.getStudents = function() {
 	    $http.get(route+'/students')
 	      .then((res) => {
@@ -95,7 +122,10 @@
 	    $http.get(route + '/' + student._id + '/ideas')
 	      .then((res) => {
 	        student.showIdeas = false;
-	        student.ideas = res.data.data;
+	        student.addIdea = false;
+	        if(res.data.data.length > 0) {
+	          student.ideas = res.data.data;
+	        }
 	      }, function(error) {
 	        console.log(error);
 	      })
@@ -103,7 +133,8 @@
 	  $scope.createNewIdea = function(student, newIdea) {
 	    $http.post(route+ '/' + student._id + '/ideas', newIdea)
 	      .then((res) => {
-	        console.log(res);
+	        console.log(res)
+	        student.ideas.push(newIdea);
 	      })
 	  }
 	  $scope.removeIdea = function(student, idea) {
@@ -111,6 +142,15 @@
 	      .then((res) => {
 	        console.log(res);
 	        student.ideas = student.ideas.filter((s) => s._id != idea._id);
+	      }, function(error) {
+	        console.log(error);
+	      })
+	  }
+	  $scope.updateIdea = function(student, idea) {
+	    $http.put(route + '/' + student._id + '/ideas/' + idea._id, idea)
+	      .then((res) => {
+	        console.log(res);
+	        student.ideaEditing = false;
 	      }, function(error) {
 	        console.log(error);
 	      })
